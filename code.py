@@ -142,10 +142,19 @@ def write_data(data):
                    'Latitude': gps.lat,
                    'Longitude': gps.lon,
                    'Data': data}).replace("'", "\"")
-                   
-    with open(file_name, 'a+b') as output:
-        n = output.write(out_str)
-        return n
+    
+    w_max = 1000
+    w_remaining  = len(out_str)
+            
+    with open(file_name, 'a') as output:
+        if radar.count>0:
+            bytes_out = output.write(',')
+        while w_remaining >= w_max:
+            s_index =  len(out_str) - w_remaining
+            bytes_out = output.write(out_str[s_index: s_index+w_max])
+            w_remaining -= w_max
+        bytes_out = output.write(out_str[-w_remaining:])
+    return 0
 
 
 # Main
